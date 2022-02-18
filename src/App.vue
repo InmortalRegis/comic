@@ -84,7 +84,7 @@ export default defineComponent({
     border: 1px solid $cinder;
     padding: 0.5rem 1rem;
     border-radius: $radius-sm;
-    box-shadow: $default-box-shadow;
+    box-shadow: $default-box-shadow !important;
     margin-bottom: 1rem;
   }
 }
