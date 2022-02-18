@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "vue": "^3.2.29",
+    "vue-star-rating": "^2.1.0",
     "vuex": "^4.0.2"
   },
   "devDependencies": {
@@ -18,6 +19,8 @@
     "eslint": "^8.5.0",
     "eslint-plugin-vue": "^8.2.0",
     "prettier": "^2.5.1",
+    "sass": "^1.49.8",
+    "sass-loader": "^12.6.0",
     "vite": "^2.7.13"
   }
 }

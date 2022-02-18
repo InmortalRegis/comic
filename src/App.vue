@@ -1,87 +1,91 @@
-<script setup>
-import HelloWorld from "./components/HelloWorld.vue";
-import TheWelcome from "./components/TheWelcome.vue";
-</script>
-
 <template>
-  <header>
-    <img
-      alt="Vue logo"
-      class="logo"
-      src="./assets/logo.svg"
-      width="125"
-      height="125"
-    />
+  <main class="main">
+    <div class="comic">
+      <button class="comic__random-btn">Random</button>
+      <div v-if="randomComic">
+        <h1 class="comic__title">{{ randomComic.title }}</h1>
+        <img class="comic__img" :src="randomComic.img" alt="" />
+        <p>
+          {{ randomComic.alt }}
+        </p>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+        <star-rating
+          class="comic__rating"
+          v-model:rating="rating"
+          :show-rating="false"
+        ></star-rating>
+      </div>
+
+      <h1 v-if="isLoading">... Loading</h1>
     </div>
-  </header>
-
-  <main>
-    <TheWelcome />
   </main>
 </template>
 
-<style>
-@import "./assets/base.css";
+<script>
+import { computed, defineComponent, ref } from "vue";
+import { useStore } from "vuex";
+import StarRating from "vue-star-rating";
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+export default defineComponent({
+  components: {
+    StarRating,
+  },
+  setup() {
+    const store = useStore();
+    const errorResult = ref();
+    const isLoading = ref(false);
+    const randomComic = computed(() => store.state.comic.randomComic);
+    const rating = ref(0);
 
-  font-weight: normal;
-}
+    const getRandomComic = async () => {
+      try {
+        isLoading.value = true;
+        await store.dispatch("comic/getRandomComic");
+        isLoading.value = false;
+      } catch (error) {
+        errorResult.value = error;
+      }
+    };
 
-header {
-  line-height: 1.5;
-}
+    getRandomComic();
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
+    return {
+      randomComic,
+      rating,
+      isLoading,
+    };
+  },
+});
+</script>
 
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-}
+<style lang="scss">
+@import "./assets/base.scss";
 
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
+.comic {
+  background-color: $white;
+  border: 1px solid $cinder;
+  max-width: 780px;
+  border-radius: $radius-lg;
+  margin: 0px auto;
+  padding: 21px;
+
+  position: relative;
+  &__title {
+    color: $cinder;
+    margin-bottom: 1rem;
   }
-}
-
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
+  &__rating {
+    justify-content: center;
   }
 
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
-
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
+  &__random-btn {
+    background-color: $rock-blue;
+    color: $white;
+    border: 1px solid $cinder;
+    padding: 0.5rem 1rem;
+    border-radius: $radius-sm;
+    box-shadow: $default-box-shadow;
+    margin-bottom: 1rem;
   }
 }
 </style>
