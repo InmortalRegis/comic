@@ -1,4 +1,4 @@
-<div align="center">
+<div align="center" style="background-color: #D3D3D3;">
     <img src="https://masiv.com/wp-content/uploads/2021/11/v2Mesa-de-trabajo-15.png">
 </div>
 
