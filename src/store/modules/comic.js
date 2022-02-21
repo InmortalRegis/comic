@@ -20,31 +20,27 @@ const getters = {};
 
 // actions
 const actions = {
-  async getCurrentComic({ commit }) {
-    const currentComic = await getCurrrentComic();
-    commit("SET_CURRENT_COMIC", currentComic);
-    return currentComic;
-  },
+  async getRandomComic({ commit }) {
+    try {
+      const currentComic = await getCurrrentComic();
+      console.log(
+        "🚀 ~ file: comic.js ~ line 26 ~ getRandomComic ~ currentComic",
+        currentComic
+      );
 
-  async getRandomComic({ commit, dispatch }) {
-    const currentComic = await dispatch("getCurrentComic");
-    console.log(
-      "🚀 ~ file: comic.js ~ line 37 ~ getRandomComic ~ currentComic",
-      currentComic
-    );
-    const randomNumber = randomNumberByMax(currentComic.num);
-    console.log(
-      "🚀 ~ file: comic.js ~ line 36 ~ getRandomComic ~ randomNumber",
-      randomNumber
-    );
-    const randomComic = await getComicById(randomNumber);
-    console.log(
-      "🚀 ~ file: comic.js ~ line 41 ~ getRandomComic ~ randomComic",
-      randomComic
-    );
+      const randomNumber = randomNumberByMax(currentComic.data.num);
 
-    commit("SET_RANDOM_COMIC", randomComic);
-    return randomComic;
+      const randomComic = await getComicById(randomNumber);
+
+      commit("SET_RANDOM_COMIC", randomComic.data);
+      return randomComic;
+    } catch (error) {
+      if (error.response.status === 403) {
+        throw new Error(
+          "Please go to https://cors-anywhere.herokuapp.com and press 'Request temporary access to the demo server' button"
+        );
+      }
+    }
   },
 };
 
